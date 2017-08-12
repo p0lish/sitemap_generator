@@ -77,8 +77,13 @@ def apply_link_filter(link):
         return True
 
 def is_link_in_same_domain(root, link):
+    prefix="www."
     root_domain = root.split("//", 1)[1]
+    if root_domain.startswith(prefix):
+        root_domain = root_domain[len(prefix):]
     link_domain = link.split("//", 1)[1].split("/")[0].split("?")[0]
+    if link_domain.startswith(prefix):
+        link_domain = link_domain[len(prefix):]
     return root_domain == link_domain
 
 def get_all_links_from(current_url, m, h):
@@ -143,7 +148,6 @@ def ready(_url):
             print(current_url, COUNTER, len(link_pool))
             links = get_all_links_from(current_url, MAIN_URL, http_prefix)
             xml_entry = url_to_xmlcontent(current_url)
-
             root.append(xml_entry)
             doc.write(filename)
             link_pool = link_pool.union(links)

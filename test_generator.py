@@ -22,6 +22,8 @@ class TestGenerator(unittest.TestCase):
         url_5 = '//example.com?wtf=1'
         url_6 = '//example.com//test//lol'
         url_7 = '//example1.com/?site=example.com'
+        url_8 = 'https://www.example.com'
+        url_9 = 'https://example.com/'
 
         self.assertTrue(is_link_in_same_domain(root, url_1))
         self.assertTrue(is_link_in_same_domain(root, url_2))
@@ -30,3 +32,5 @@ class TestGenerator(unittest.TestCase):
         self.assertTrue(is_link_in_same_domain(root, url_5))
         self.assertTrue(is_link_in_same_domain(root, url_6))
         self.assertFalse(is_link_in_same_domain(root, url_7))
+        self.assertTrue(is_link_in_same_domain(root, url_8))
+        self.assertTrue(is_link_in_same_domain(root, url_9))
