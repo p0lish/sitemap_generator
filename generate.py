@@ -30,7 +30,7 @@ SKELETON_CONTENT = '''<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9
                       </urlset>
                    '''
 
-
+HTML_MIMETYPE = "text/html"
 
 
 # get contents from url #
@@ -47,7 +47,11 @@ def get_content(url):
     try:
         req = requests.get(url, headers={'User-Agent': USERAGENT}, verify=False)
         content = req.content
-        return content
+        mimetype = req.headers['content-type']
+        if HTML_MIMETYPE in mimetype:
+            return content
+        else:
+            return ""
     except urllib.error.HTTPError as e:
         logger.info("this url not working properly %s the error is: %s", url, e)
         return ""
@@ -101,6 +105,7 @@ def get_all_links_from(current_url, m, h):
 
 
 def url_to_xmlcontent(c):
+    c = c.replace("&", "&amp;")
     xml_element = '''
     
     <url>
