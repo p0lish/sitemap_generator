@@ -1,4 +1,6 @@
 #!/usr/bin/python
+import datetime
+
 import requests
 import urllib.error
 import urllib.request
@@ -31,7 +33,7 @@ SKELETON_CONTENT = '''<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9
                    '''
 
 HTML_MIMETYPE = "text/html"
-
+DEFAULT_PRIORITY=0.5
 
 # get contents from url #
 
@@ -50,14 +52,11 @@ def get_content(url):
         mimetype = req.headers['content-type']
         if HTML_MIMETYPE in mimetype:
             return content
-        else:
-            return ""
     except urllib.error.HTTPError as e:
         logger.info("this url not working properly %s the error is: %s", url, e)
-        return ""
     except requests.exceptions.InvalidSchema as invalidschema:
         collect_wrong_urls(url)
-        return ""
+    return ""
 
 
 def collect_wrong_urls(url):
@@ -109,10 +108,15 @@ def url_to_xmlcontent(c):
     xml_element = '''
     
     <url>
-        <loc>{}</loc>
+        <loc>{url}</loc>
+        <lastmod>{lastmod}</lastmod>
+        <priority>{priority}</priority>
     </url>
     
-    '''.format(c)
+    '''.format(url=c,
+               lastmod=datetime.datetime.now(),
+               priority=DEFAULT_PRIORITY
+               )
     return ET.fromstring(xml_element)
 
 
